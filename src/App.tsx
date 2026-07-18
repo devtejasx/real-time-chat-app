@@ -10,6 +10,13 @@ const queryClient = new QueryClient({
       staleTime: 30_000,
       refetchOnWindowFocus: false,
       retry: 1,
+      // Always attempt requests and surface failures as errors. Without this,
+      // React Query's default "online" mode pauses queries when the backend is
+      // unreachable (treating it as offline), so error states never render.
+      networkMode: "always",
+    },
+    mutations: {
+      networkMode: "always",
     },
   },
 });
