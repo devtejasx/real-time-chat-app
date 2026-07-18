@@ -3,6 +3,8 @@ export { DashboardPage } from "./DashboardPage";
 export { CollectionsPage } from "./CollectionsPage";
 export { CollectionDetailPage } from "./CollectionDetailPage";
 export { TestExecutionPage } from "./TestExecutionPage";
+export { ExecutionsPage } from "./ExecutionsPage";
+export { ExecutionDetailPage } from "./ExecutionDetailPage";
 export { ReportsPage } from "./ReportsPage";
 export { ReportDetailPage } from "./ReportDetailPage";
 export { CICDPage } from "./CICDPage";
