@@ -1,0 +1,14 @@
+# Frontend image build context excludes.
+node_modules
+dist
+backend
+.git
+.github
+postman
+reports
+.env
+.env.*
+*.md
+Dockerfile
+docker-compose.yml
+.dockerignore
