@@ -10,9 +10,10 @@ import { idParamSchema } from "../validators/common.validator";
 
 const router = Router();
 
-router.use(authenticate);
+// Triggering a run mutates state — require authentication.
+router.post("/run", authenticate, validate({ body: runExecutionSchema }), executionController.run);
 
-router.post("/run", validate({ body: runExecutionSchema }), executionController.run);
+// Reads are public.
 router.get("/", validate({ query: listExecutionsQuerySchema }), executionController.list);
 router.get("/:id", validate({ params: idParamSchema }), executionController.getById);
 
