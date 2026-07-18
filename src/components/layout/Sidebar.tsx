@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
+  Activity,
   Boxes,
   Container,
   FolderGit2,
@@ -29,6 +30,7 @@ const NAV: { section: string; items: NavItem[] }[] = [
       { label: "Dashboard", to: paths.dashboard, icon: GaugeCircle, end: true },
       { label: "Collections", to: paths.collections, icon: FolderGit2 },
       { label: "Test Execution", to: paths.execution, icon: PlayCircle },
+      { label: "Executions", to: paths.executions, icon: Activity },
       { label: "Reports", to: paths.reports, icon: ScrollText },
     ],
   },
