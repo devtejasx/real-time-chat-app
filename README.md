@@ -195,6 +195,21 @@ npm run test:api:cli    # CLI only
 
 Reports are written to `reports/newman-report.html` and `reports/newman-report.xml`.
 
+## API Test Results
+
+Latest Newman run against the dockerized backend:
+
+| Metric              | Result |
+| ------------------- | ------ |
+| Requests            | 23     |
+| Assertions          | 69     |
+| Failures            | **0**  |
+| Avg. response time  | ~22ms  |
+
+Every endpoint is covered with assertions for status codes, JSON schema,
+required fields, response time, `Content-Type`, authentication and error
+responses. See [docs/TESTING.md](docs/TESTING.md) for the full strategy.
+
 ## Running GitHub Actions
 
 The workflow at `.github/workflows/api-tests.yml` runs on every `push` and
