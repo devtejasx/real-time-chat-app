@@ -4,10 +4,16 @@ on:
   push:
   pull_request:
 
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: api-tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   api-tests:
     name: Newman API tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       # 1. Checkout repository
@@ -24,15 +30,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 3. Start Docker Compose (PostgreSQL + backend).
-      #    The backend entrypoint waits for Postgres, runs `prisma migrate
-      #    deploy` (step 5) and seeds the database (step 6) before starting
-      #    the server (step 7) — so steps 4-7 are handled here.
+      # 3. Start Docker Compose (PostgreSQL + backend)
       - name: Start database and backend
         run: docker compose up -d --build db backend
 
-      # 4. Wait for PostgreSQL + backend to be ready (health implies the
-      #    entrypoint finished migrations and seeding).
+      # 4. Wait for backend availability
       - name: Wait for backend to be healthy
         run: |
           echo "Waiting for backend at http://localhost:8080/api/health …"
@@ -47,17 +49,31 @@ jobs:
           docker compose logs backend
           exit 1
 
-      # 8. Run Newman (fails the job on any failed assertion — step 10).
+      # 5. Run database migrations (explicit; idempotent — the entrypoint has
+      #    already applied them, this makes the step visible and re-runnable).
+      - name: Run database migrations
+        run: docker compose exec -T backend npx prisma migrate deploy
+
+      # 6. Seed the database (ensures a deterministic dataset before tests)
+      - name: Seed database
+        run: docker compose exec -T backend node dist/seed/run.js
+
+      # 7. Backend is already running (started in step 3); confirm health again.
+      - name: Confirm backend is serving
+        run: curl -fs http://localhost:8080/api/health
+
+      # 8. Run Newman (fails the job on any failed assertion — step 10)
       - name: Run Newman API tests
         run: npm run test:api
 
-      # 9. Upload reports (always, so failures are inspectable).
+      # 9. Upload HTML + JUnit reports (always, so failures are inspectable)
       - name: Upload Newman reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: newman-reports
           path: reports/
+          retention-days: 30
           if-no-files-found: warn
 
       - name: Dump backend logs on failure
