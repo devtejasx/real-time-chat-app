@@ -1,4 +1,4 @@
-import { Github, Globe, Moon, Save, Sun } from "lucide-react";
+import { Github, Globe, Moon, Save, Server, Sun } from "lucide-react";
 import { PageHeader } from "@/components/common";
 import {
   Card,
@@ -113,6 +113,32 @@ export function SettingsPage() {
                 </SelectContent>
               </Select>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* API connection */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Server className="h-4 w-4" />
+              API Connection
+            </CardTitle>
+            <CardDescription>
+              Base URL of the backend the dashboard fetches data from.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Label htmlFor="apiUrl">Backend API URL</Label>
+            <Input
+              id="apiUrl"
+              value={settings.apiUrl}
+              onChange={(e) => update({ apiUrl: e.target.value })}
+              placeholder="http://localhost:8080/api"
+            />
+            <p className="text-xs text-muted-foreground">
+              Applied to every request immediately — no reload required. Falls back
+              to <span className="font-mono">VITE_API_BASE_URL</span> when empty.
+            </p>
           </CardContent>
         </Card>
 
