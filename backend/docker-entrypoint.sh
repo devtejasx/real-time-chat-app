@@ -18,8 +18,8 @@ until node -e "require('net').createConnection({host:'${DB_HOST}',port:${DB_PORT
   sleep 2
 done
 
-echo "✅ PostgreSQL is up — applying schema"
-npx prisma db push --skip-generate --accept-data-loss
+echo "✅ PostgreSQL is up — applying migrations"
+npx prisma migrate deploy
 
 echo "🌱 Seeding database"
 node dist/seed/run.js || echo "⚠️  Seed step failed or already applied — continuing"
