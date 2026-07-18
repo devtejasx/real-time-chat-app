@@ -9,7 +9,10 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:api": "newman run postman/REST-API-Testing.postman_collection.json -e postman/REST-API-Testing.postman_environment.json -r cli,htmlextra,junit --reporter-htmlextra-export reports/newman-report.html --reporter-junit-export reports/newman-report.xml",
+    "test:api:cli": "newman run postman/REST-API-Testing.postman_collection.json -e postman/REST-API-Testing.postman_environment.json -r cli",
+    "test:api:ci": "newman run postman/REST-API-Testing.postman_collection.json -e postman/REST-API-Testing.postman_environment.json --env-var baseUrl=$BASE_URL -r cli,htmlextra,junit --reporter-htmlextra-export reports/newman-report.html --reporter-junit-export reports/newman-report.xml"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",
@@ -41,6 +44,8 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
