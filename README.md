@@ -231,6 +231,28 @@ act -j api-tests            # requires Docker + act
   `dist/` to any static host (Vercel/Netlify). Set `VITE_API_BASE_URL` to the
   deployed backend.
 
+## Screenshots
+
+> Add images to `docs/screenshots/` (see the [capture guide](docs/screenshots/README.md)).
+
+### Dashboard
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Collections
+![Collections](docs/screenshots/collections.png)
+
+### Executions
+![Executions](docs/screenshots/executions.png)
+
+### Newman test report
+![Newman report](docs/screenshots/newman.png)
+
+### GitHub Actions
+![GitHub Actions](docs/screenshots/github-actions.png)
+
+### Docker containers
+![Docker containers](docs/screenshots/docker.png)
+
 ## Future Improvements
 
 - WebSocket/SSE stream for live execution progress from the real runner.
