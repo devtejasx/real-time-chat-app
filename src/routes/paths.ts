@@ -4,6 +4,8 @@ export const paths = {
   collections: "/collections",
   collectionDetail: (id = ":id") => `/collections/${id}`,
   execution: "/execution",
+  executions: "/executions",
+  executionDetail: (id = ":id") => `/executions/${id}`,
   reports: "/reports",
   reportDetail: (id = ":id") => `/reports/${id}`,
   cicd: "/cicd",
