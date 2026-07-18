@@ -1,0 +1,96 @@
+// Prisma schema for the REST API Testing Suite backend.
+// Datasource: PostgreSQL. Client: prisma-client-js.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Application users. Passwords are stored as bcrypt hashes.
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
+
+/// A Postman-style collection of API requests + tests.
+model Collection {
+  id            String      @id @default(uuid())
+  name          String
+  description   String      @default("")
+  totalRequests Int         @default(0)
+  totalTests    Int         @default(0)
+  createdAt     DateTime    @default(now())
+
+  executions    Execution[]
+
+  @@map("collections")
+}
+
+/// A single run of a collection.
+model Execution {
+  id         String          @id @default(uuid())
+  collectionId String
+  status     ExecutionStatus @default(RUNNING)
+  duration   Int             @default(0) // milliseconds
+  startedAt  DateTime        @default(now())
+  finishedAt DateTime?
+
+  collection Collection      @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  results    RequestResult[]
+  report     Report?
+
+  @@index([collectionId])
+  @@index([status])
+  @@map("executions")
+}
+
+/// The result of a single request within an execution.
+model RequestResult {
+  id           String   @id @default(uuid())
+  executionId  String
+  endpoint     String
+  method       String
+  statusCode   Int
+  responseTime Int // milliseconds
+  passed       Boolean  @default(false)
+
+  execution    Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  @@index([executionId])
+  @@map("request_results")
+}
+
+/// Aggregated report for one execution.
+model Report {
+  id                  String   @id @default(uuid())
+  executionId         String   @unique
+  totalTests          Int      @default(0)
+  passed              Int      @default(0)
+  failed              Int      @default(0)
+  averageResponseTime Float    @default(0)
+
+  execution           Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ExecutionStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
