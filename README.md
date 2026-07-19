@@ -246,8 +246,6 @@ act -j api-tests            # requires Docker + act
 
 ## Screenshots
 
-> Add images to `docs/screenshots/` (see the [capture guide](docs/screenshots/README.md)).
-
 ### Dashboard
 ![Dashboard](docs/screenshots/dashboard.png)
 
@@ -256,6 +254,9 @@ act -j api-tests            # requires Docker + act
 
 ### Executions
 ![Executions](docs/screenshots/executions.png)
+
+### Reports
+![Reports](docs/screenshots/report-detail.png)
 
 ### Newman test report
 ![Newman report](docs/screenshots/newman.png)
