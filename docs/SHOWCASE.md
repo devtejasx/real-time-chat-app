@@ -73,6 +73,41 @@ JWT · Zod · Postman · Newman · Docker · GitHub Actions.
 
 ---
 
+## LinkedIn post (ready to publish)
+
+> 🚀 Just shipped: a full-stack REST API Testing Suite.
+>
+> It's an internal-tooling style dashboard for managing and monitoring automated
+> API tests — the kind of thing a QA or platform team would actually reach for.
+>
+> What it does 👇
+> 🧪 Manage API collections, trigger test executions, and browse reports
+> 📊 Live dashboard with real stats + charts (pass/fail, response times, trends)
+> 🕓 Execution history with status badges and per-request results
+> 🐳 The whole stack — frontend + backend + PostgreSQL — starts with one
+>     `docker compose up`
+>
+> Under the hood 🛠️
+> • Frontend: React 19 + TypeScript, Vite, Tailwind, shadcn/ui, TanStack Query
+> • Backend: Node.js + Express + TypeScript, clean layered architecture
+>   (controllers → services → repositories), Prisma + PostgreSQL, JWT auth, Zod
+> • Testing: a Postman collection run with Newman — 23 requests, 69 assertions,
+>   0 failures — with HTML + JUnit reports
+> • CI/CD: GitHub Actions spins up the stack on every push, runs the tests, and
+>   fails the build if anything breaks ✅
+>
+> The part I enjoyed most was wiring it all together so it's genuinely
+> reproducible: clone → `docker compose up` → migrations + seed run themselves →
+> the same tests that gate CI pass locally.
+>
+> Code + docs 👉 https://github.com/devtejasx/real-time-chat-app
+>
+> Feedback welcome! 🙌
+>
+> #WebDevelopment #FullStack #React #TypeScript #NodeJS #Express #PostgreSQL
+> #Prisma #Docker #DevOps #CICD #GitHubActions #Postman #Newman #APITesting
+> #SoftwareEngineering #100DaysOfCode
+
 ## Résumé bullets
 
 - Built a full-stack REST API testing dashboard (React/TypeScript + Express/
