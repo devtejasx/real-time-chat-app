@@ -14,8 +14,8 @@ Guide for getting a local environment running from a fresh clone.
 ## Option A — Everything in Docker (recommended)
 
 ```bash
-git clone https://github.com/devtejasx/real-time-chat-app.git
-cd real-time-chat-app
+git clone https://github.com/devtejasx/rest-api-testing-suite.git
+cd rest-api-testing-suite
 docker compose up --build
 ```
 
