@@ -4,6 +4,7 @@ import { ZodError } from "zod";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../config/logger";
+import { logService } from "../services/log.service";
 import { isProduction } from "../config/env";
 import type { ErrorDetail, ErrorResponse } from "../types";
 
@@ -54,6 +55,7 @@ export function errorHandler(
   // Log server-side faults with their stack; client faults at a lower level.
   if (statusCode >= 500) {
     logger.error(err instanceof Error ? err.stack || err.message : String(err));
+    logService.record("ERROR", `${statusCode} ${err instanceof Error ? err.message : message}`, "error");
   } else {
     logger.warn(`${statusCode} ${message}`);
   }
