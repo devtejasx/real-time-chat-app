@@ -1,7 +1,7 @@
 # Folder Structure
 
 ```
-real-time-chat-app/
+rest-api-testing-suite/
 ├── src/                          # Frontend (React 19 + Vite)
 │   ├── components/
 │   │   ├── ui/                   # shadcn/ui primitives (button, card, table…)
