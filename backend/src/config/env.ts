@@ -25,6 +25,13 @@ const envSchema = z.object({
 
   SEED_ADMIN_EMAIL: z.string().email().default("admin@rats.dev"),
   SEED_ADMIN_PASSWORD: z.string().min(6).default("Admin@12345"),
+
+  // Newman runner — the Postman collection/env to execute, where to write
+  // reports, and the base URL the collection targets (the API under test).
+  POSTMAN_COLLECTION_PATH: z.string().default("./postman/REST-API-Testing.postman_collection.json"),
+  POSTMAN_ENV_PATH: z.string().default("./postman/REST-API-Testing.postman_environment.json"),
+  REPORTS_DIR: z.string().default("./reports"),
+  NEWMAN_TARGET_URL: z.string().default("http://localhost:8080/api"),
 });
 
 const parsed = envSchema.safeParse(process.env);
