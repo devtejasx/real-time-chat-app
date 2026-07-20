@@ -17,7 +17,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url({ message: "DATABASE_URL must be a valid URL" }),
 
   JWT_SECRET: z.string().min(10, "JWT_SECRET must be at least 10 characters"),
-  JWT_EXPIRES_IN: z.string().default("7d"),
+  JWT_EXPIRES_IN: z.string().default("15m"), // short-lived access token
+  JWT_REFRESH_EXPIRES_IN: z.string().default("7d"), // long-lived refresh token
   BCRYPT_SALT_ROUNDS: z.coerce.number().int().min(4).max(15).default(10),
 
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(900_000),
