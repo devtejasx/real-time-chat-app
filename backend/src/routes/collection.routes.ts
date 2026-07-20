@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { collectionController } from "../controllers/collection.controller";
 import { validate } from "../middleware/validate";
-import { authenticate } from "../middleware/auth";
+import { authenticate, authorize } from "../middleware/auth";
 import {
   createCollectionSchema,
   updateCollectionSchema,
@@ -20,22 +20,25 @@ router.get(
   collectionController.history,
 );
 
-// Writes require authentication.
+// Managing collections is Admin-only.
 router.post(
   "/",
   authenticate,
+  authorize("ADMIN"),
   validate({ body: createCollectionSchema }),
   collectionController.create,
 );
 router.put(
   "/:id",
   authenticate,
+  authorize("ADMIN"),
   validate({ params: idParamSchema, body: updateCollectionSchema }),
   collectionController.update,
 );
 router.delete(
   "/:id",
   authenticate,
+  authorize("ADMIN"),
   validate({ params: idParamSchema }),
   collectionController.remove,
 );

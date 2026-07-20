@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { executionController } from "../controllers/execution.controller";
 import { validate } from "../middleware/validate";
-import { authenticate } from "../middleware/auth";
+import { authenticate, authorize } from "../middleware/auth";
 import {
   runExecutionSchema,
   listExecutionsQuerySchema,
@@ -10,14 +10,26 @@ import { idParamSchema } from "../validators/common.validator";
 
 const router = Router();
 
-// Triggering a run mutates state — require authentication.
-router.post("/run", authenticate, validate({ body: runExecutionSchema }), executionController.run);
+// Running a collection is allowed for Admins and Testers.
+router.post(
+  "/run",
+  authenticate,
+  authorize("ADMIN", "TESTER"),
+  validate({ body: runExecutionSchema }),
+  executionController.run,
+);
 
-// Reads are public.
+// Reads are public (Viewers included).
 router.get("/", validate({ query: listExecutionsQuerySchema }), executionController.list);
 router.get("/:id", validate({ params: idParamSchema }), executionController.getById);
 
-// Deleting an execution mutates state — require authentication.
-router.delete("/:id", authenticate, validate({ params: idParamSchema }), executionController.remove);
+// Deleting an execution is Admin-only.
+router.delete(
+  "/:id",
+  authenticate,
+  authorize("ADMIN"),
+  validate({ params: idParamSchema }),
+  executionController.remove,
+);
 
 export default router;
