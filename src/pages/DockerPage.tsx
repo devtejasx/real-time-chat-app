@@ -16,6 +16,7 @@ import {
   PageHeader,
   ProgressIndicator,
   StatusBadge,
+  useToast,
 } from "@/components/common";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,6 +62,7 @@ function ContainerCard({
   index: number;
 }) {
   const restart = useRestartContainer();
+  const { toast } = useToast();
   const isDb = container.image.includes("postgres");
   const isCache = container.image.includes("redis");
   const Icon = isDb ? Database : isCache ? HardDrive : Container;
@@ -164,7 +166,22 @@ function ContainerCard({
             size="sm"
             className="w-full"
             disabled={restart.isPending}
-            onClick={() => restart.mutate(container.id)}
+            onClick={() =>
+              restart.mutate(container.id, {
+                onSuccess: () =>
+                  toast({
+                    title: "Container restarted",
+                    description: container.name,
+                    variant: "success",
+                  }),
+                onError: () =>
+                  toast({
+                    title: "Restart failed",
+                    description: container.name,
+                    variant: "error",
+                  }),
+              })
+            }
           >
             {restart.isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
