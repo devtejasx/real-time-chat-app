@@ -1,6 +1,6 @@
 # REST API Testing Suite
 
-[![API Tests](https://github.com/devtejasx/real-time-chat-app/actions/workflows/api-tests.yml/badge.svg)](https://github.com/devtejasx/real-time-chat-app/actions/workflows/api-tests.yml)
+[![API Tests](https://github.com/devtejasx/rest-api-testing-suite/actions/workflows/api-tests.yml/badge.svg)](https://github.com/devtejasx/rest-api-testing-suite/actions/workflows/api-tests.yml)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=nodedotjs&logoColor=white)
@@ -71,7 +71,7 @@ auth) → routes → thin controllers → services (business logic) → reposito
 ## Folder Structure
 
 ```
-real-time-chat-app/
+rest-api-testing-suite/
 ├── src/                       # Frontend (React)
 │   ├── components/            # ui/ (shadcn), common/, charts/, layout/
 │   ├── pages/                 # one file per route
@@ -106,8 +106,8 @@ real-time-chat-app/
 ## Installation
 
 ```bash
-git clone https://github.com/devtejasx/real-time-chat-app.git
-cd real-time-chat-app
+git clone https://github.com/devtejasx/rest-api-testing-suite.git
+cd rest-api-testing-suite
 
 # Frontend deps (also provides Newman)
 npm install
