@@ -5,6 +5,7 @@ import executionRoutes from "./execution.routes";
 import reportRoutes from "./report.routes";
 import dashboardRoutes from "./dashboard.routes";
 import infraRoutes from "./infra.routes";
+import logRoutes from "./log.routes";
 import { sendSuccess } from "../utils/ApiResponse";
 
 const router = Router();
@@ -19,6 +20,7 @@ router.use("/collections", collectionRoutes);
 router.use("/executions", executionRoutes);
 router.use("/reports", reportRoutes);
 router.use("/dashboard", dashboardRoutes);
+router.use("/logs", logRoutes);
 router.use("/", infraRoutes); // /docker and /github
 
 export default router;
