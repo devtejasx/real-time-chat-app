@@ -17,4 +17,14 @@ export const reportController = {
     const report = await reportService.getById(req.params.id);
     sendSuccess(res, report);
   }),
+
+  /** Serve the generated HTML report — inline to view, or as a download. */
+  html: asyncHandler(async (req: Request, res: Response) => {
+    const filePath = await reportService.getHtmlPath(req.params.id);
+    if (req.query.download !== undefined) {
+      res.download(filePath, `report-${req.params.id}.html`);
+    } else {
+      res.sendFile(filePath);
+    }
+  }),
 };
