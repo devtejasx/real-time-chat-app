@@ -10,4 +10,5 @@ export { ReportDetailPage } from "./ReportDetailPage";
 export { CICDPage } from "./CICDPage";
 export { DockerPage } from "./DockerPage";
 export { SettingsPage } from "./SettingsPage";
+export { LoginPage } from "./LoginPage";
 export { NotFoundPage } from "./NotFoundPage";
