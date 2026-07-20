@@ -6,6 +6,7 @@ import { hashPassword, comparePassword } from "../utils/password";
 import { signToken } from "../utils/jwt";
 import { env } from "../config/env";
 import { ApiError } from "../utils/ApiError";
+import { logService } from "./log.service";
 import type { RegisterInput, LoginInput } from "../validators/auth.validator";
 
 /** A user safe to return to clients (no password hash). */
@@ -51,6 +52,7 @@ export const authService = {
       role: "VIEWER", // self-registered users start read-only
     });
 
+    logService.record("AUTH", `Registered: ${user.email}`);
     return this.issueTokens(user);
   },
 
@@ -61,6 +63,7 @@ export const authService = {
     const valid = await comparePassword(input.password, user.password);
     if (!valid) throw ApiError.unauthorized("Invalid email or password");
 
+    logService.record("AUTH", `Login: ${user.email} (${user.role})`);
     return this.issueTokens(user);
   },
 
@@ -83,6 +86,7 @@ export const authService = {
   /** Revoke a refresh token (logout). Idempotent. */
   async logout(rawRefreshToken: string): Promise<void> {
     await refreshTokenRepository.revokeByHash(hashToken(rawRefreshToken));
+    logService.record("AUTH", "User logged out");
   },
 
   async getProfile(userId: string): Promise<SafeUser> {

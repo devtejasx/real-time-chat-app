@@ -7,6 +7,7 @@ import {
 import { reportRepository } from "../repositories/report.repository";
 import { collectionRepository } from "../repositories/collection.repository";
 import { newmanService } from "./newman.service";
+import { logService } from "./log.service";
 import { ApiError } from "../utils/ApiError";
 import { logger } from "../config/logger";
 import type { Paginated } from "../types";
@@ -30,6 +31,7 @@ export const executionService = {
     if (!collection) throw ApiError.notFound("Collection not found");
 
     const execution = await executionRepository.create(collectionId);
+    logService.record("EXECUTION", `Run started for "${collection.name}"`);
 
     try {
       const run = await newmanService.run({
@@ -67,6 +69,11 @@ export const executionService = {
 
       logger.info(
         `Execution ${execution.id} for "${collection.name}" finished: ${status} (${run.passed}/${run.totalTests} passed)`,
+      );
+      logService.record(
+        "EXECUTION",
+        `Run finished for "${collection.name}": ${status} (${run.passed}/${run.totalTests} passed)`,
+        status === "FAILED" ? "warn" : "info",
       );
 
       const full = await executionRepository.findById(execution.id);
