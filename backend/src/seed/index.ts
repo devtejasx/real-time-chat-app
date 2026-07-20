@@ -51,6 +51,17 @@ export async function seedDatabase(): Promise<void> {
   });
   logger.info(`   • admin user: ${env.SEED_ADMIN_EMAIL}`);
 
+  // Demo users for role-based access (Feature 8).
+  const demoPassword = await hashPassword("Password@123");
+  await prisma.user.createMany({
+    data: [
+      { name: "Tester", email: "tester@rats.dev", password: demoPassword, role: "TESTER" },
+      { name: "Viewer", email: "viewer@rats.dev", password: demoPassword, role: "VIEWER" },
+    ],
+    skipDuplicates: true,
+  });
+  logger.info("   • demo users: tester@rats.dev (TESTER), viewer@rats.dev (VIEWER)");
+
   // 5 collections.
   const collections = await Promise.all(
     COLLECTIONS.map((c) => prisma.collection.create({ data: c })),
