@@ -43,6 +43,10 @@ export function errorHandler(
   ) {
     statusCode = 401;
     message = "Invalid or expired token";
+  } else if (isBodyParserError(err)) {
+    // Malformed JSON / oversized body from express.json — a client error.
+    statusCode = err.status ?? err.statusCode ?? 400;
+    message = statusCode === 413 ? "Request body too large" : "Malformed request body";
   } else if (err instanceof Error) {
     message = err.message || message;
   }
@@ -78,4 +82,24 @@ function mapPrismaError(err: Prisma.PrismaClientKnownRequestError): {
     default:
       return { statusCode: 400, message: "Database request error" };
   }
+}
+
+interface BodyParserError extends Error {
+  type?: string;
+  status?: number;
+  statusCode?: number;
+  body?: unknown;
+}
+
+/** Detect errors thrown by express.json() (malformed / oversized body). */
+function isBodyParserError(err: unknown): err is BodyParserError {
+  if (typeof err !== "object" || err === null) return false;
+  const e = err as BodyParserError;
+  const type = typeof e.type === "string" ? e.type : "";
+  return (
+    type.startsWith("entity.") ||
+    type.startsWith("request.") ||
+    type === "charset.unsupported" ||
+    (err instanceof SyntaxError && "body" in e)
+  );
 }
