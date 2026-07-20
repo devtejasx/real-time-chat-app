@@ -1,4 +1,4 @@
-import { Bell, Command, Menu, Play, Search } from "lucide-react";
+import { Bell, Command, LogIn, Menu, Play, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,17 +11,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSettings } from "@/hooks";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/components/common";
 import { paths } from "@/routes/paths";
-import { capitalize } from "@/utils/format";
 
 interface TopNavProps {
   onMenuClick: () => void;
 }
 
+const initials = (name: string) =>
+  name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
 /** Top navigation bar: menu toggle, search, environment, run + user. */
 export function TopNav({ onMenuClick }: TopNavProps) {
   const navigate = useNavigate();
   const { settings } = useSettings();
+  const { user, isAuthenticated, hasRole, logout } = useAuth();
+  const { toast } = useToast();
+  const canRun = hasRole("ADMIN", "TESTER");
+
+  const handleLogout = async () => {
+    await logout();
+    toast({ title: "Signed out", variant: "info" });
+    navigate(paths.login);
+  };
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-xl lg:px-6">
@@ -47,14 +65,16 @@ export function TopNav({ onMenuClick }: TopNavProps) {
           {settings.environment}
         </Badge>
 
-        <Button
-          size="sm"
-          onClick={() => navigate(paths.execution)}
-          className="hidden sm:inline-flex"
-        >
-          <Play className="h-4 w-4" />
-          Run Tests
-        </Button>
+        {canRun && (
+          <Button
+            size="sm"
+            onClick={() => navigate(paths.execution)}
+            className="hidden sm:inline-flex"
+          >
+            <Play className="h-4 w-4" />
+            Run Tests
+          </Button>
+        )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -83,37 +103,46 @@ export function TopNav({ onMenuClick }: TopNavProps) {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 text-sm font-semibold text-white"
-              aria-label="Account"
-            >
-              TN
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium normal-case tracking-normal text-foreground">
-                  Tejas Nagmote
-                </span>
-                <span className="text-xs font-normal normal-case tracking-normal text-muted-foreground">
-                  {capitalize(settings.environment)} workspace
-                </span>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate(paths.settings)}>
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(paths.docker)}>
-              Environment
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-rose-400">Sign out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {isAuthenticated && user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 text-sm font-semibold text-white"
+                aria-label="Account"
+              >
+                {initials(user.name)}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium normal-case tracking-normal text-foreground">
+                    {user.name}
+                  </span>
+                  <span className="flex items-center gap-1.5 text-xs font-normal normal-case tracking-normal text-muted-foreground">
+                    {user.email}
+                    <Badge variant="secondary" className="text-[10px]">
+                      {user.role}
+                    </Badge>
+                  </span>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate(paths.settings)}>
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-rose-400" onClick={handleLogout}>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button size="sm" variant="outline" onClick={() => navigate(paths.login)}>
+            <LogIn className="h-4 w-4" />
+            Sign in
+          </Button>
+        )}
       </div>
     </header>
   );
