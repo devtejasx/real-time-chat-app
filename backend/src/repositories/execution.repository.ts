@@ -31,6 +31,11 @@ export const executionRepository = {
     return prisma.execution.update({ where: { id }, data });
   },
 
+  delete(id: string): Promise<Execution> {
+    // Cascades to request_results and report (see schema onDelete: Cascade).
+    return prisma.execution.delete({ where: { id } });
+  },
+
   findById(id: string): Promise<ExecutionWithGraph | null> {
     return prisma.execution.findUnique({ where: { id }, include: withGraph });
   },
