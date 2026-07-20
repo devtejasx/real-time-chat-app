@@ -14,6 +14,7 @@ export { ProgressIndicator } from "./ProgressIndicator";
 export { ExecutionTimeline } from "./ExecutionTimeline";
 export type { TimelineStep } from "./ExecutionTimeline";
 export { PageHeader } from "./PageHeader";
+export { ToastProvider, useToast } from "./Toaster";
 export {
   StatCardSkeleton,
   ChartSkeleton,
