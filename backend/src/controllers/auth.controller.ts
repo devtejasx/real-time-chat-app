@@ -20,4 +20,14 @@ export const authController = {
     const profile = await authService.getProfile(user!.id);
     sendSuccess(res, profile);
   }),
+
+  refresh: asyncHandler(async (req: Request, res: Response) => {
+    const result = await authService.refresh(req.body.refreshToken);
+    sendSuccess(res, result, 200, "Token refreshed");
+  }),
+
+  logout: asyncHandler(async (req: Request, res: Response) => {
+    await authService.logout(req.body.refreshToken);
+    sendSuccess(res, { loggedOut: true }, 200, "Logged out");
+  }),
 };
