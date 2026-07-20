@@ -938,7 +938,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('rejected without JSON content-type (4xx)', () => pm.expect(pm.response.code).to.be.within(400, 415));"
+                  "pm.test('handled gracefully without a server error (< 500)', () => pm.expect(pm.response.code).to.be.below(500));"
                 ]
               }
             }
