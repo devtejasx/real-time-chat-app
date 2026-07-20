@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/components/common/Toaster";
+import { AuthProvider } from "@/hooks/useAuth";
 import { router } from "@/routes";
 
 /** A single QueryClient for the whole app. */
@@ -27,7 +28,9 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={200}>
         <ToastProvider>
-          <RouterProvider router={router} />
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
         </ToastProvider>
       </TooltipProvider>
     </QueryClientProvider>

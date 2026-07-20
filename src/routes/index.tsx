@@ -8,6 +8,7 @@ import {
   DockerPage,
   ExecutionDetailPage,
   ExecutionsPage,
+  LoginPage,
   NotFoundPage,
   ReportDetailPage,
   ReportsPage,
@@ -20,6 +21,7 @@ import { paths } from "./paths";
  * Application router. Every page renders inside the DashboardLayout shell.
  */
 export const router = createBrowserRouter([
+  { path: paths.login, element: <LoginPage /> },
   {
     path: paths.dashboard,
     element: <DashboardLayout />,

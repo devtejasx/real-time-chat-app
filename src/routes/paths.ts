@@ -1,5 +1,6 @@
 /** Application route paths — single source of truth for navigation. */
 export const paths = {
+  login: "/login",
   dashboard: "/",
   collections: "/collections",
   collectionDetail: (id = ":id") => `/collections/${id}`,
