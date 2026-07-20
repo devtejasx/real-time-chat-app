@@ -4,7 +4,7 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import { corsOrigins } from "./config/env";
 import { openApiSpec } from "./config/swagger";
-import { httpLogger, requestId } from "./middleware/requestLogger";
+import { httpLogger, requestId, dbRequestLogger } from "./middleware/requestLogger";
 import { apiLimiter } from "./middleware/rateLimiter";
 import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
@@ -33,6 +33,7 @@ export function createApp(): Application {
   // Observability.
   app.use(requestId);
   app.use(httpLogger);
+  app.use(dbRequestLogger);
 
   // Rate limiting on the API surface.
   app.use("/api", apiLimiter);

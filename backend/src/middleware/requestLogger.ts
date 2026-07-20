@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import { morganStream } from "../config/logger";
 import { isProduction } from "../config/env";
 import { generateId } from "../utils/id";
+import { logService } from "../services/log.service";
 
 /** Attach a unique correlation id to every request/response. */
 export function requestId(req: Request, res: Response, next: NextFunction): void {
@@ -21,3 +22,21 @@ const format = isProduction
 
 /** HTTP access logger that pipes through Winston. */
 export const httpLogger = morgan(format, { stream: morganStream });
+
+/**
+ * Persist a REQUEST log row per response (Feature 12). Fire-and-forget; skips
+ * noisy / self-referential endpoints to avoid recursion and log spam.
+ */
+export function dbRequestLogger(req: Request, res: Response, next: NextFunction): void {
+  const start = Date.now();
+  res.on("finish", () => {
+    const path = req.originalUrl.split("?")[0];
+    if (path.includes("/logs") || path.endsWith("/health") || path.includes("/docs")) {
+      return;
+    }
+    const ms = Date.now() - start;
+    const level = res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info";
+    logService.record("REQUEST", `${req.method} ${path} → ${res.statusCode} (${ms}ms)`, level);
+  });
+  next();
+}
